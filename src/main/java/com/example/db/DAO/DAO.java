@@ -7,5 +7,5 @@ import java.util.List;
 public interface DAO {
     void createPurchase(Purchase purchase);
     List<Purchase> getPurchasesList();
-    void putPurchaseStatus(String title);
+    boolean putPurchaseStatus(String title);
 }

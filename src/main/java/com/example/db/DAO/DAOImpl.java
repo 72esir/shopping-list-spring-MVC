@@ -4,13 +4,11 @@ import com.example.db.models.Purchase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class DAOImpl implements DAO{
     private final SessionFactory factory;
@@ -50,19 +48,25 @@ public class DAOImpl implements DAO{
     }
 
     @Override
-    public void putPurchaseStatus(String title) {
+    public boolean putPurchaseStatus(String title) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
 
             Purchase purchaseToUpdate = session.byNaturalId(Purchase.class)
                     .using("title", title)
                     .load();
-            purchaseToUpdate.setBoughtStatus();
 
+            if (purchaseToUpdate == null) {
+                return false;
+            }
+
+            purchaseToUpdate.setBoughtStatus();
             session.getTransaction().commit();
-        }catch (Exception e){
+            return true;
+        } catch (Exception e) {
             System.err.println("Put purchase status error!");
             e.printStackTrace();
+            return false;
         }
     }
 }

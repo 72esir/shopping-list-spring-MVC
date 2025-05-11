@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,9 +14,15 @@ public class PurchaseControllers {
     DAOImpl dao = new DAOImpl();
 
     @PostMapping("/purchases")
-    public void postPurchase(@RequestBody Purchase purchaseRequest){
-        Purchase purchaseToSave = new Purchase(purchaseRequest.getTitle(), purchaseRequest.getQuantity());
-        dao.createPurchase(purchaseToSave);
+    public ResponseEntity<String> postPurchase(@RequestBody Purchase purchaseRequest){
+        try {
+            Purchase purchaseToSave = new Purchase(purchaseRequest.getTitle(), purchaseRequest.getQuantity());
+            dao.createPurchase(purchaseToSave);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Purchase created successfully.");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create purchase.");
+        }
     }
 
     @GetMapping("/purchases")
@@ -32,7 +37,17 @@ public class PurchaseControllers {
     }
 
     @PutMapping("/purchases/{title}")
-    public void putStatus(@PathVariable String title){
-        dao.putPurchaseStatus(title);
+    public ResponseEntity<String> putStatus(@PathVariable String title) {
+        try {
+            boolean updated = dao.putPurchaseStatus(title);
+            if (updated) {
+                return ResponseEntity.ok("Purchase status updated successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Purchase not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update status.");
+        }
     }
 }

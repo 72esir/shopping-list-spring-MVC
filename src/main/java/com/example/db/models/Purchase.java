@@ -1,12 +1,29 @@
-package com.example.models;
+package com.example.db.models;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
+
+@Entity
+@Table(name = "purchases")
 public class Purchase {
-    private final String title;
-    private final int count;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @NaturalId
+    @Column(name = "title", unique = true, nullable = false)
+    private String title;
+
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
+    @Column(name = "status", nullable = false)
     private Status status;
 
-    public Purchase(String title, int count){
-        this.count = count;
+    protected Purchase() {}
+
+    public Purchase(String title, int quantity){
+        this.quantity = quantity;
         this.title = title;
         status = Status.NOT_BOUGHT;
     }

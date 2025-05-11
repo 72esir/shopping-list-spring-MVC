@@ -11,6 +11,6 @@
         <property name="hibernate.connection.password"> </property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
-        <mapping class="com.example.dbService.Entities.User"/>
+        <mapping class="com.example.db.models.Purchase"/>
     </session-factory>
 </hibernate-configuration>

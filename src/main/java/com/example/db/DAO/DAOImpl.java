@@ -27,6 +27,7 @@ public class DAOImpl implements DAO{
             session.getTransaction().commit();
         }catch (Exception e){
             System.err.println("Create purchase error!");
+            e.printStackTrace();
         }
     }
 
@@ -36,13 +37,14 @@ public class DAOImpl implements DAO{
         try (Session session = factory.openSession()) {
             session.beginTransaction();
 
-            String hql = "FROM Purchases";
+            String hql = "FROM Purchase";
             Query<Purchase> query = session.createQuery(hql, Purchase.class);
             purchases = query.list();
 
             session.getTransaction().commit();
         }catch (Exception e){
             System.err.println("Get purchases list error!");
+            e.printStackTrace();
         }
         return purchases;
     }
@@ -60,6 +62,7 @@ public class DAOImpl implements DAO{
             session.getTransaction().commit();
         }catch (Exception e){
             System.err.println("Put purchase status error!");
+            e.printStackTrace();
         }
     }
 }
